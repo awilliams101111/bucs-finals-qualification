@@ -209,7 +209,8 @@ def parse_data(df: pd.DataFrame, club_code: int, finals_capacity: int) -> dict:
     club_df["safety margin"] = (
         (club_df["placelimit"] - club_df["national rank"]) / club_df["placelimit"]
     )
-    club_df["safety margin"] = club_df["safety margin"] * 100
+    club_df["safety margin"] = (club_df["safety margin"] * 100).round(2)
+    club_df["qualification score"] = club_df["class"].map(qual_scores)
 
     return {
         "df": df,
@@ -303,7 +304,14 @@ def _allocate_placelimits(
 def _title_case_headers(df: pd.DataFrame) -> pd.DataFrame:
     """Capitalize each word in output column headings."""
     out = df.copy()
-    out.columns = [str(col).replace("_", " ").title() for col in out.columns]
+    renamed_cols = []
+    for col in out.columns:
+        col_str = str(col)
+        if col_str == "Tot.":
+            renamed_cols.append("Score")
+        else:
+            renamed_cols.append(col_str.replace("_", " ").title())
+    out.columns = renamed_cols
     if out.index.name:
         out.index.name = str(out.index.name).replace("_", " ").title()
     return out
@@ -407,7 +415,11 @@ def write_output(parsed: dict, output_path: str):
 
         # Club results sheet
         club_result_cols = [c for c in result_columns if c in club_df.columns]
-        extra_cols = [c for c in ["class", "safety margin"] if c in club_df.columns]
+        extra_cols = [
+            c
+            for c in ["class", "qualification score", "safety margin"]
+            if c in club_df.columns
+        ]
         all_club_cols = list(dict.fromkeys(club_result_cols + extra_cols))
         club_out = (
             club_df[all_club_cols]

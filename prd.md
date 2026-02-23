@@ -33,7 +33,7 @@ Task: automatically scrape ianseo.net archery results data from 3 BUCS archery q
     - Log when data scraping from each tournament is complete, and when the output has been generated.
 
 
-# New Requirements
+# New Requirements 1
 In addition to meeting the above requirements, adapt the code to alos do the following.
 - Capatalise each word for all column headings
 - Use letter apreviations for the sheet names for results by class, such as RO
@@ -42,3 +42,8 @@ In addition to meeting the above requirements, adapt the code to alos do the fol
 - Change the entry_numbers sheet to be labelled as qualification entry numbers
 - calculate number of people to qualify after checking if some categories have the minimum of 8 participants. At present there are 257 spaces allocated for the finals, but only 250 places. Check which categories need 8 spaces, subtract these from the total capacity, then do the proportionate allocation.
 - Where scores are tied, the rank is decided first by who has more hits hits and then by golds. Apply these sorts to the dataframe after all data is read in and before national rank is calculated
+
+# New Requirements 2
+- Round safety margin to 2 decimal places.
+- in club results table also report qualification score for the category of each archer, after their class but before the safety margin
+- Rename Tot. to Score
