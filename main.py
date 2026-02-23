@@ -211,6 +211,7 @@ def parse_data(df: pd.DataFrame, club_code: int, finals_capacity: int) -> dict:
     )
     club_df["safety margin"] = (club_df["safety margin"] * 100).round(2)
     club_df["qualification score"] = club_df["class"].map(qual_scores)
+    club_df["qualification rank"] = club_df["class"].map(placelimits)
 
     return {
         "df": df,
@@ -309,6 +310,10 @@ def _title_case_headers(df: pd.DataFrame) -> pd.DataFrame:
         col_str = str(col)
         if col_str == "Tot.":
             renamed_cols.append("Score")
+        elif col_str == "qualification score":
+            renamed_cols.append("Score Required To Qualify")
+        elif col_str == "qualification rank":
+            renamed_cols.append("Rank Required To Qualify")
         else:
             renamed_cols.append(col_str.replace("_", " ").title())
     out.columns = renamed_cols
@@ -417,7 +422,12 @@ def write_output(parsed: dict, output_path: str):
         club_result_cols = [c for c in result_columns if c in club_df.columns]
         extra_cols = [
             c
-            for c in ["class", "qualification score", "safety margin"]
+            for c in [
+                "class",
+                "qualification score",
+                "qualification rank",
+                "safety margin",
+            ]
             if c in club_df.columns
         ]
         all_club_cols = list(dict.fromkeys(club_result_cols + extra_cols))
@@ -426,6 +436,7 @@ def write_output(parsed: dict, output_path: str):
             .sort_values("safety margin", ascending=False)
             .reset_index(drop=True)
         )
+
         _title_case_headers(club_out).to_excel(
             writer,
             sheet_name="Club_Results",
