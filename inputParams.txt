@@ -1,0 +1,2 @@
+TournamentIDs = [26329, 26328, 26327]
+ClubCode = 2373
