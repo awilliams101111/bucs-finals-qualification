@@ -1,0 +1,1 @@
+Adapt the code in main.py to instead pull all the data from this URL: https://www.ianseo.net/TourData/2026/27297/IQAL.php and add all the scores, hits and golds up. Write this code in brit.py and put it into a loop which runs every 10 minutes and saves the results to a pandas df and then to a csv.
